@@ -1,77 +1,90 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clock</title>
+  </head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      outline: 0;
+      box-sizing: border-box;
+    }
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Clock</title>
-</head>
-<style>
-  .container {
-    width: 600px;
-    height: 200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    background-color: #545454a1;
-    border-radius: 8px;
-  }
+    .container {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-  .container .box {
-    text-align: center;
-  }
+    .container .box {
+      width: 50vw;
+      height: 50vh;
+      min-height: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background-color: #545454a1;
+      border-radius: 8px;
+    }
 
-  .container .time {
-    color: #FFF;
-    font-weight: bold;
-    padding: 8px;
-    border: 2px solid rgb(163, 157, 157);
-    border-radius: 8px;
-  }
+    .container .time {
+      color: #fff;
+      font-weight: bold;
+      padding: 8px;
+      border: 2px solid rgb(163, 157, 157);
+      border-radius: 8px;
+    }
 
-  .container button {
-    margin-top: 16px;
-    border: 2px solid #FFFFFFa9;
-    border-radius: 8px;
-    cursor: pointer;
-    outline-style: none;
-  }
+    .container button {
+      margin-top: 16px;
+      border: 2px solid #ffffffa9;
+      border-radius: 8px;
+      cursor: pointer;
+      outline-style: none;
+    }
 
-  .container button:hover {
-    transition: 400ms;
-    background-color: #FFF;
-  }
-</style>
+    .container button:hover {
+      transition: 400ms;
+      background-color: #fff;
+    }
+  </style>
 
-<body>
-  <div class="container">
-    <div class="box">
-      <h1>Hora Atual</h1>
-      <div class="time">00:00</div>
-      <button onclick="clickButton()">Sincronizar</button>
+  <body>
+    <div class="container">
+      <div class="box">
+        <h1>Hora Atual</h1>
+        <div class="time">00:00</div>
+        <button onclick="clickButton()">Sincronizar</button>
+      </div>
     </div>
-  </div>
 
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+      function clickButton() {
+        UpdateTime();
+        setInterval(UpdateTime, 1000);
+      }
 
-    function clickButton() {
-      UpdateTime()
-      setInterval(UpdateTime, 1000)
-    }
+      async function UpdateTime() {
+        const {
+          data: { datetime },
+        } = await axios.get(
+          'http://worldtimeapi.org/api/timezone/America/Fortaleza'
+        );
+        var horas = datetime.substring(11, 13);
+        var minutos = datetime.substring(14, 16);
+        var segundos = datetime.substring(17, 19);
 
-    async function UpdateTime() {
-      const { data: { datetime } } = await axios.get("http://worldtimeapi.org/api/timezone/America/Fortaleza")
-      var horas = datetime.substring(11, 13)
-      var minutos = datetime.substring(14, 16)
-      var segundos = datetime.substring(17, 19)
+        const time = document.querySelector('.container .time');
 
-      const time = document.querySelector(".container .time")
-
-      time.innerHTML = `${horas}:${minutos}:${segundos}`
-    }
-
-  </script>
-</body>
-
+        time.innerHTML = `${horas}:${minutos}:${segundos}`;
+      }
+    </script>
+  </body>
 </html>
